@@ -48,9 +48,9 @@ app.use((req, res, next) => {
 });
 app.use(express.static(publicDir));
 
-// Start HTTPS server
-const server = https.createServer(sslOptions, app);
-const wss = new WebSocketServer({ server });
+// Start HTTPS expressTemplate
+const expressTemplate = https.createServer(sslOptions, app);
+const wss = new WebSocketServer({ server: expressTemplate });
 
 // Debounced reload sender
 let reloadTimeout = null;
@@ -70,6 +70,6 @@ const triggerReload = () => {
 chokidar.watch(publicDir, { ignoreInitial: true }).on('all', triggerReload);
 
 // Launch
-server.listen(PORT, () => {
+expressTemplate.listen(PORT, () => {
   console.log(`🔐 HTTPS server running at https://localhost:${PORT}`);
 });

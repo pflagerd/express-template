@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "Local development HTTPS server with static file serving and auto-reload.",
   "type": "module",
-  "main": "server.mjs",
+  "main": "express-template.mjs",
   "scripts": {
-    "start": "node server.mjs"
+    "start": "node express-template.mjs"
   },
   "author": "Code GPT",
   "license": "MIT",
