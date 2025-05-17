@@ -69,7 +69,7 @@ const triggerReload = () => {
 };
 
 // Watch for file changes
-chokidar.watch(publicDir, { ignoreInitial: true, depth: Infinity, persistent: true }).on('all', triggerReload);                               // Starts watching the directory and calls triggerReload() on every change (excluding initial scan)
+chokidar.watch(publicDir, { ignoreInitial: true, depth: Infinity, persistent: true, awaitWriteFinish: { stabilityThreshold: 100, pollInterval: 50 } }).on('all', triggerReload);                               // Starts watching the directory and calls triggerReload() on every change (excluding initial scan)
 
 // Launch
 expressTemplate.listen(PORT, () => {                                                                      // Starts the server on the given port and logs the address
