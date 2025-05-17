@@ -10,6 +10,7 @@ import { dirname } from 'path';                                                 
 const __dirname = dirname(fileURLToPath(import.meta.url));                                                       // ES module alternative to __dirname. Gets the absolute path of the directory where the current file resides.
 const certDir = join(__dirname, 'cert');                                                                         // certDir: path to the folder where HTTPS certs live
 const PORT = process.env.PORT || 3443;                                                                    // PORT: configurable port with default fallback to 3443
+const debugging = false;                                                                                       // Set this to enable debug logging.
 
 // Parse CLI args for root directory
 const args = process.argv.slice(2);                                                                             // Parses --root=some/path from the command line
@@ -63,12 +64,12 @@ const triggerReload = () => {
     wss.clients.forEach(client => {
       if (client.readyState === 1) client.send('reload');
     });
-    console.log('♻️  Reload triggered');
+    if (debugging) console.log('♻️  Reload triggered');
   }, debounceTime);
 };
 
 // Watch for file changes
-chokidar.watch(publicDir, { ignoreInitial: true, depth: Infinity }).on('all', triggerReload);                               // Starts watching the directory and calls triggerReload() on every change (excluding initial scan)
+chokidar.watch(publicDir, { ignoreInitial: true, depth: Infinity, persistent: true }).on('all', triggerReload);                               // Starts watching the directory and calls triggerReload() on every change (excluding initial scan)
 
 // Launch
 expressTemplate.listen(PORT, () => {                                                                      // Starts the server on the given port and logs the address
