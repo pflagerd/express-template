@@ -31,7 +31,8 @@ const app = express();
 // Inject WebSocket script into HTML responses
 app.use((req, res, next) => {
   if (req.accepts('html')) {                                                                                       // Intercepts HTML file requests, defaults / to /index.html
-    const filePath = join(publicDir, req.path === '/' ? '/index.html' : req.path);
+    const reqPath = req.path.endsWith('/') ? req.path + 'index.html' : req.path;
+    const filePath = join(publicDir, reqPath);
     if (existsSync(filePath) && statSync(filePath).isFile() && filePath.endsWith('.html')) {                            // Ensures the file exists and is an actual HTML file
       let raw = readFileSync(filePath, 'utf8');
       const injected = raw.replace(                                                                               // Adds a WebSocket auto-reload script just before </body>
@@ -67,7 +68,7 @@ const triggerReload = () => {
 };
 
 // Watch for file changes
-chokidar.watch(publicDir, { ignoreInitial: true }).on('all', triggerReload);                               // Starts watching the directory and calls triggerReload() on every change (excluding initial scan)
+chokidar.watch(publicDir, { ignoreInitial: true, depth: Infinity }).on('all', triggerReload);                               // Starts watching the directory and calls triggerReload() on every change (excluding initial scan)
 
 // Launch
 expressTemplate.listen(PORT, () => {                                                                      // Starts the server on the given port and logs the address

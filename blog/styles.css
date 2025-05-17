@@ -1,0 +1,112 @@
+/* Reset basics */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fafafa;
+}
+
+code {
+  font-size: 1.20em;
+}
+
+.container {
+  width: 90%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+header {
+  background: #222;
+  color: #fff;
+  padding: 1rem 0;
+}
+
+header h1 {
+  margin-bottom: 0.5rem;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+nav a {
+  color: #fff;
+  text-decoration: none;
+}
+
+p {
+  margin-bottom: 0.5rem;
+}
+
+.hero {
+  background: #eee;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.posts .post {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #ccc;
+}
+
+.post h3 {
+  margin-bottom: 0.5rem;
+}
+
+.post .meta {
+  font-size: 0.7rem;
+  color: #666;
+}
+
+footer {
+  background: #222;
+  color: #fff;
+  text-align: center;
+  padding: 1rem 0;
+  margin-top: 2rem;
+}
+
+table {
+  border-collapse: collapse;
+  width: 95%;
+  margin: 20px 0;
+  font-family: Arial, sans-serif;
+}
+
+th, td {
+  border: 1px solid #444;
+  padding: 10px;
+  text-align: center;
+}
+
+thead {
+  background-color: #f2f2f2;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+tbody tr:hover {
+  background-color: #e0f7fa;
+}
+
+td:first-child, th:first-child {
+  white-space: nowrap;
+}
+
+td:nth-child(2), th:nth-child(2) {
+  text-align: left;
+}

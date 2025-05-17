@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>express-template</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>express-template</h1>
+      <p>A chromium-only blog</p>
+      <p>There's a meta-blog <a href="meta-blog.html" target="_blank">here</a> where I track my progress on modifying/improving this blog code.</p>
+      <br/>
+      <nav>
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Articles</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="posts">
+      <article id="article-1" class="post">
+        <h3>Creating a baseline express-template</h3>
+        <p class="meta">I want to use this server in all kinds of places.</p>
+        <p class="meta">2025-05-16 18:21 (UTC-7) by Daniel</p>
+        <p>I had ChatGPT generate this for me. It wasn't great at coding. In fact the code it generated doesn't quite work.</p>
+        <p>I'm going to have to do a lot more work. </p>
+        <p>Current problem might have to do with the case where express-template infers index.html</p>
+        <p>In that case the location passed back to the client is incorrect.</p>
+        <p>Implemented a fix which seems to work.</p>
+      </article>
+
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 Daniel P. Pflager. All rights reserved.</p>
+    </div>
+  </footer>
+  <script>
+  </script>
+</body>
+</html>
