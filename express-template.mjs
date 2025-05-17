@@ -1,27 +1,27 @@
-import express from 'express';
-import https from 'https';
-import { readFileSync, statSync, existsSync } from 'fs';
-import { join } from 'path';
-import chokidar from 'chokidar';
-import { WebSocketServer } from 'ws';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import express from 'express';                                                                                         // Imports the Express framework to build the web server.
+import https from 'https';                                                                                             // Built-in Node.js module to create an HTTPS server (as opposed to HTTP).
+import { readFileSync, statSync, existsSync } from 'fs';                                                               // Node.js file system methods for reading files and checking if they exist or are files.
+import { join } from 'path';                                                                                           // path.join safely joins paths for all operating systems.
+import chokidar from 'chokidar';                                                                                       // A powerful file watcher to detect changes in the file system in real-time.
+import { WebSocketServer } from 'ws';                                                                                  // A WebSocket server using the ws library to push reload commands to connected browsers.
+import { fileURLToPath } from 'url';                                                                                   // Required in ES modules to get the current file’s directory path.
+import { dirname } from 'path';                                                                                        // Required in ES modules to get the current file’s directory path.
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const certDir = join(__dirname, 'cert');
-const PORT = process.env.PORT || 3443;
+const __dirname = dirname(fileURLToPath(import.meta.url));                                                       // ES module alternative to __dirname. Gets the absolute path of the directory where the current file resides.
+const certDir = join(__dirname, 'cert');                                                                         // certDir: path to the folder where HTTPS certs live
+const PORT = process.env.PORT || 3443;                                                                    // PORT: configurable port with default fallback to 3443
 
 // Parse CLI args for root directory
-const args = process.argv.slice(2);
+const args = process.argv.slice(2);                                                                             // Parses --root=some/path from the command line
 const rootArg = args.find(arg => arg.startsWith('--root='));
-const publicDir = rootArg
-  ? join(__dirname, rootArg.split('=')[1])
-  : join(__dirname, 'public');
+const publicDir = rootArg                                                                                        // Defaults to ./ if not specified
+    ? join(__dirname, rootArg.split('=')[1])
+  : join(__dirname, './');
 
 console.log(`📂 Serving static files from: ${publicDir}`);
 
 // HTTPS setup
-const sslOptions = {
+const sslOptions = {                                                              // Reads the key.pem and cert.pem files to set up an HTTPS server
   key: readFileSync(join(certDir, 'key.pem')),
   cert: readFileSync(join(certDir, 'cert.pem')),
 };
@@ -30,12 +30,12 @@ const app = express();
 
 // Inject WebSocket script into HTML responses
 app.use((req, res, next) => {
-  if (req.accepts('html')) {
+  if (req.accepts('html')) {                                                                                       // Intercepts HTML file requests, defaults / to /index.html
     const filePath = join(publicDir, req.path === '/' ? '/index.html' : req.path);
-    if (existsSync(filePath) && statSync(filePath).isFile() && filePath.endsWith('.html')) {
+    if (existsSync(filePath) && statSync(filePath).isFile() && filePath.endsWith('.html')) {                            // Ensures the file exists and is an actual HTML file
       let raw = readFileSync(filePath, 'utf8');
-      const injected = raw.replace(
-        '</body>',
+      const injected = raw.replace(                                                                               // Adds a WebSocket auto-reload script just before </body>
+        '</body>',                                                                                            // Client will reconnect to server and reload the page when notified
         `<script>
           const ws = new WebSocket('wss://' + location.host);
           ws.onmessage = () => location.reload();
@@ -44,16 +44,16 @@ app.use((req, res, next) => {
       return res.send(injected);
     }
   }
-  next();
+  next();                                                                                                               // If not an HTML file, just move on to the next middleware
 });
-app.use(express.static(publicDir));
+app.use(express.static(publicDir));                                                                                     // Standard middleware to serve static files from the chosen directory
 
 // Start HTTPS expressTemplate
-const expressTemplate = https.createServer(sslOptions, app);
-const wss = new WebSocketServer({ server: expressTemplate });
+const expressTemplate = https.createServer(sslOptions, app);                        // Creates the HTTPS server ...
+const wss = new WebSocketServer({ server: expressTemplate });                                    // ... and attaches a WebSocket server to it
 
 // Debounced reload sender
-let reloadTimeout = null;
+let reloadTimeout = null;                                                                                          // Watches for file changes and debounces reload messages (prevents spam reloads)
 const debounceTime = 300; // milliseconds
 
 const triggerReload = () => {
@@ -67,9 +67,9 @@ const triggerReload = () => {
 };
 
 // Watch for file changes
-chokidar.watch(publicDir, { ignoreInitial: true }).on('all', triggerReload);
+chokidar.watch(publicDir, { ignoreInitial: true }).on('all', triggerReload);                               // Starts watching the directory and calls triggerReload() on every change (excluding initial scan)
 
 // Launch
-expressTemplate.listen(PORT, () => {
+expressTemplate.listen(PORT, () => {                                                                      // Starts the server on the given port and logs the address
   console.log(`🔐 HTTPS server running at https://localhost:${PORT}`);
 });
